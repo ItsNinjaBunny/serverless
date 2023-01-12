@@ -1,0 +1,46 @@
+service: serverless-test
+
+useDotenv: true
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-west-2
+  environment:
+    AWS_ACCESS_ACCOUNT_KEY: ${env:AWS_ACCESS_ACCOUNT_KEY}
+    AWS_SECRET_ACCOUNT_KEY: ${env:AWS_SECRET_ACCOUNT_KEY}
+
+functions:
+  main:
+    handler: ./dist/serverless.handler
+    events:
+      - http:
+          method: get
+          path: /hello/{id}
+      - http:
+          method: post
+          path: /post
+      # - httpApi:
+      #     method: get
+      #     path: /accounts/{id}
+      # - httpApi:
+      #     method: get
+      #     path: /accounts/
+      # - httpApi:
+      #     method: post
+      #     path: /accounts
+      # - httpApi:
+      #     method: patch
+      #     path: /accounts/{id}
+      # - httpApi:
+      #     method: delete
+      #     path: /accounts/{id}
+# package:
+#   patterns:
+#     - "!node_modules/.prisma/client/libquery_engine-*"
+#     - "node_modules/.prisma/client/libquery_engine-rhel-*"
+#     - "!node_modules/prisma/libquery_engine-*"
+#     - "!node_modules/@prisma/engines/**"
