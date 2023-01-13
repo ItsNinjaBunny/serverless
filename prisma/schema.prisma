@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+  binaryTargets   = ["native", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id       String  @id @default(cuid())
+  password String
+  person   Person?
+}
+
+model Person {
+  id              String           @id @default(cuid())
+  firstName       String
+  lastName        String
+  email           String           @unique
+  phoneNumber     String           @unique
+  account         Account?         @relation(fields: [accountId], references: [id])
+  accountId       String?          @unique
+  Performer       Performer?
+  Director        Director?
+  CastingDirector CastingDirector?
+}
+
+model Performer {
+  id       String  @id @default(cuid())
+  person   Person? @relation(fields: [personId], references: [id])
+  personId String? @unique
+
+  characters         Character[]
+  performances       Performance[] @relation(name: "performance")
+  performanceHistory Performance[] @relation(name: "history")
+}
+
+model Director {
+  id       String  @id @default(cuid())
+  person   Person? @relation(fields: [personId], references: [id])
+  personId String? @unique
+
+  performance Performance[]
+}
+
+model CastingDirector {
+  id       String  @id @default(cuid())
+  person   Person? @relation(fields: [personId], references: [id])
+  personId String? @unique
+
+  performance Performance[]
+}
+
+model Performance {
+  id              String          @id @default(cuid())
+  name            String
+  director        Director        @relation(fields: [directorId], references: [id])
+  castingDirector CastingDirector @relation(fields: [castingDirectorId], references: [id])
+  cast            Character[]
+  venue           Venue           @relation(fields: [venueId], references: [id])
+  venueId         String
+
+  performer          Performer? @relation(name: "performance", fields: [performerId], references: [id])
+  performerId        String?    @unique
+  performerHistory   Performer? @relation(name: "history", fields: [performerHistoryId], references: [id])
+  performerHistoryId String?    @unique
+  directorId         String
+  castingDirectorId  String
+}
+
+model Venue {
+  id          String        @id @default(cuid())
+  street      String
+  city        String
+  state       String
+  postalCode  String
+  Performance Performance[]
+}
+
+model Character {
+  id            Int           @id @default(autoincrement())
+  name          String
+  role          CharacterRole
+  performer     Performer?    @relation(fields: [performerId], references: [id])
+  performerId   String?       @unique
+  Performance   Performance?  @relation(fields: [performanceId], references: [id])
+  performanceId String?
+}
+
+enum CharacterRole {
+  lead
+  supporting
+  extra
+}

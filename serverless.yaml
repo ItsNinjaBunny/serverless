@@ -23,6 +23,24 @@ functions:
       - http:
           method: post
           path: /post
+
+      # api calls
+      - http:
+          method: get
+          path: /accounts/{id}
+      - http:
+          method: post
+          path: /accounts
+      - http:
+          method: get
+          path: /accounts
+      - http:
+          method: patch
+          path: /accounts
+      - http:
+          method: delete
+          path: /accounts
+
       # - httpApi:
       #     method: get
       #     path: /accounts/{id}
@@ -38,9 +56,9 @@ functions:
       # - httpApi:
       #     method: delete
       #     path: /accounts/{id}
-# package:
-#   patterns:
-#     - "!node_modules/.prisma/client/libquery_engine-*"
-#     - "node_modules/.prisma/client/libquery_engine-rhel-*"
-#     - "!node_modules/prisma/libquery_engine-*"
-#     - "!node_modules/@prisma/engines/**"
+package:
+  patterns:
+    - "!node_modules/.prisma/client/libquery_engine-*"
+    - "node_modules/.prisma/client/libquery_engine-rhel-*"
+    - "!node_modules/prisma/libquery_engine-*"
+    - "!node_modules/@prisma/engines/**"
