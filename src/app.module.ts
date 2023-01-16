@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AccountsModule } from './accounts/accounts.module';
-import { PerformancesModule } from './performances/performances.module';
+import { AccountsModule } from './modules/accounts/accounts.module';
+import { PerformancesModule } from './modules/performances/performances.module';
 
 @Module({
   imports: [
