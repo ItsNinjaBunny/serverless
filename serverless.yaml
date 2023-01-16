@@ -1,17 +1,13 @@
-service: serverless-test
-
-useDotenv: true
+service: serverless
 
 plugins:
   - serverless-offline
+  - serverless-dotenv-plugin
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   region: us-west-2
-  environment:
-    AWS_ACCESS_ACCOUNT_KEY: ${env:AWS_ACCESS_ACCOUNT_KEY}
-    AWS_SECRET_ACCOUNT_KEY: ${env:AWS_SECRET_ACCOUNT_KEY}
 
 functions:
   main:
@@ -21,7 +17,7 @@ functions:
           method: get
           path: /hello/{id}
       - http:
-          method: post
+          method: get
           path: /post
 
       # api calls
@@ -36,10 +32,10 @@ functions:
           path: /accounts
       - http:
           method: patch
-          path: /accounts
+          path: /accounts/{id}
       - http:
           method: delete
-          path: /accounts
+          path: /accounts/{id}
 
       # - httpApi:
       #     method: get

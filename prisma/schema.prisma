@@ -2,9 +2,9 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
-  binaryTargets   = ["native", "rhel-openssl-1.0.x"]
+  provider      = "prisma-client-js"
+  // previewFeatures = ["fullTextSearch"]
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
@@ -13,28 +13,22 @@ datasource db {
 }
 
 model Account {
-  id       String  @id @default(cuid())
-  password String
-  person   Person?
-}
+  id          String @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String @unique
+  phoneNumber String @unique
+  password    String
 
-model Person {
-  id              String           @id @default(cuid())
-  firstName       String
-  lastName        String
-  email           String           @unique
-  phoneNumber     String           @unique
-  account         Account?         @relation(fields: [accountId], references: [id])
-  accountId       String?          @unique
-  Performer       Performer?
-  Director        Director?
-  CastingDirector CastingDirector?
+  Performer       Performer?       @relation(name: "performer")
+  Director        Director?        @relation(name: "director")
+  CastingDirector CastingDirector? @relation(name: "castingDirector")
 }
 
 model Performer {
-  id       String  @id @default(cuid())
-  person   Person? @relation(fields: [personId], references: [id])
-  personId String? @unique
+  id        String  @id @default(cuid())
+  account   Account @relation(name: "performer", fields: [accountId], references: [id])
+  accountId String  @unique
 
   characters         Character[]
   performances       Performance[] @relation(name: "performance")
@@ -42,17 +36,17 @@ model Performer {
 }
 
 model Director {
-  id       String  @id @default(cuid())
-  person   Person? @relation(fields: [personId], references: [id])
-  personId String? @unique
+  id        String  @id @default(cuid())
+  account   Account @relation(name: "director", fields: [accountId], references: [id])
+  accountId String  @unique
 
   performance Performance[]
 }
 
 model CastingDirector {
-  id       String  @id @default(cuid())
-  person   Person? @relation(fields: [personId], references: [id])
-  personId String? @unique
+  id        String  @id @default(cuid())
+  account   Account @relation(name: "castingDirector", fields: [accountId], references: [id])
+  accountId String  @unique
 
   performance Performance[]
 }

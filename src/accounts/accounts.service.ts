@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Account } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateAccountDto, UpdateAccountDto, } from 'src/types';
 import { hash } from '../functions/index';
-import cuid from 'cuid';
+import * as cuid from 'cuid';
 
 @Injectable()
 export class AccountsService {
@@ -13,60 +13,84 @@ export class AccountsService {
     private readonly prisma: PrismaService
   ) { }
 
-  async getAccount(id: string): Promise<Account> {
-    return await this.prisma.account.findUnique({ where: { id: id } });
-  }
-
-  async createAccount(account: CreateAccountDto) {
-    const { password, person } = account;
-    const { type, ...info } = person;
-    const typeInfo = this.getType(type);
-
-
-    return await this.prisma.account.create({
-      data: {
-        password: await hash(password, 10),
-        person: {
-          create: {
-            ...info,
-            ...typeInfo,
-          }
-        }
+  async getAccount(id: string, options: Prisma.AccountSelect) {
+    return await this.prisma.account.findUnique({
+      where: {
+        id: id
+      }, select: {
+        ...options
       }
     });
   }
 
-  async findAll(): Promise<Account[]> {
-    return await this.prisma.account.findMany();
+  async createAccount(account: CreateAccountDto, options: Prisma.AccountSelect) {
+    const { password, email, ...person } = account;
+    const { type, ...info } = person;
+    const typeInfo = this.getType(type);
+
+    return await this.prisma.account.create({
+      data: {
+        ...info,
+        email: email.toLowerCase(),
+        password: await hash(password, 10),
+        ...typeInfo
+      }, select: {
+        ...options
+      }
+    });
   }
 
-  async updateAccount(id: string, account: UpdateAccountDto) {
-    const { password, ...person } = account;
+  async findAll(options: Prisma.AccountSelect) {
+    return await this.prisma.account.findMany({
+      select: {
+        ...options
+      }
+    });
+  }
+
+  async updateAccount(id: string, account: UpdateAccountDto, options: Prisma.AccountSelect) {
     return await this.prisma.account.update({
       where: {
         id: id
       },
       data: {
-        password,
-        person: {
-          update: {
-            ...person,
-          }
-        }
+        ...account,
+      }, select: {
+        ...options
       }
     })
   }
 
   async deleteAccount(id: string) {
-    return await this.prisma.account.delete({
+    const account = await this.getAccount(id, {
+      Performer: true,
+      Director: true,
+      CastingDirector: true
+    });
+    await this.prisma.account.update({
       where: {
         id: id
+      }, data: {
+        Performer: {
+          delete: account.Performer ? true : false
+        },
+        Director: {
+          delete: account.Director ? true : false,
+        },
+        CastingDirector: {
+          delete: account.CastingDirector ? true : false,
+        }
+      }
+    });
+    return await this.prisma.account.delete({
+      where: {
+        id: id,
       }
     });
   }
 
   private getType(type: 'performer' | 'director' | 'casting director') {
-    switch (type) {
+    switch(type) {
       case 'performer':
         return {
           Performer: {
