@@ -54,6 +54,7 @@ model CastingDirector {
 model Performance {
   id              String          @id @default(cuid())
   name            String
+  dates           DateTime[]
   director        Director        @relation(fields: [directorId], references: [id])
   castingDirector CastingDirector @relation(fields: [castingDirectorId], references: [id])
   cast            Character[]
