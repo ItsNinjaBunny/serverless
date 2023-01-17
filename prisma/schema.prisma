@@ -56,12 +56,11 @@ model CastingDirector {
 model Performance {
   id              String          @id @default(cuid())
   name            String
-  dates           DateTime[]
+  dates           DateTime[]      @default([])
   director        Director        @relation(fields: [directorId], references: [id])
   castingDirector CastingDirector @relation(fields: [castingDirectorId], references: [id])
   cast            Character[]
-  venue           Venue           @relation(fields: [venueId], references: [id])
-  venueId         String
+  venue           Venue?
 
   performer          Performer? @relation(name: "performance", fields: [performerId], references: [id])
   performerId        String?    @unique
@@ -72,17 +71,18 @@ model Performance {
 }
 
 model Venue {
-  id          String        @id @default(cuid())
-  street      String
-  city        String
-  state       String
-  postalCode  String
-  Performance Performance[]
+  id            String       @id @default(cuid())
+  street        String
+  city          String
+  state         String
+  postalCode    String
+  performance   Performance? @relation(fields: [performanceId], references: [id])
+  performanceId String?      @unique
 }
 
 model Character {
-  id            Int           @id @default(autoincrement())
-  name          String
+  id            String        @id @default(cuid())
+  name          String        @unique
   role          CharacterRole
   performer     Performer?    @relation(fields: [performerId], references: [id])
   performerId   String?       @unique

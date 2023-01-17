@@ -30,7 +30,7 @@ export class AccountsController {
       Director: {
         select: {
           id: true,
-          performance: true,
+          performances: true,
         }
       },
       CastingDirector: {
@@ -83,7 +83,7 @@ export class AccountsController {
       Director: {
         select: {
           id: true,
-          performance: true,
+          performances: true,
         }
       },
       CastingDirector: {
@@ -120,7 +120,7 @@ export class AccountsController {
       Director: {
         select: {
           id: true,
-          performance: true,
+          performances: true,
         }
       },
       CastingDirector: {

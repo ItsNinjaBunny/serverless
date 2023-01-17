@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { CreateAccountDto, UpdateAccountDto, } from 'src/types';
-import { hash } from '../functions/index';
+import { hash } from 'src/functions';
 import * as cuid from 'cuid';
 
 @Injectable()

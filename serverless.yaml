@@ -13,20 +13,13 @@ functions:
   main:
     handler: ./dist/serverless.handler
     events:
-      - http:
-          method: get
-          path: /hello/{id}
-      - http:
-          method: get
-          path: /post
-
-      # api calls
-      - http:
-          method: get
-          path: /accounts/{id}
+      # account routes
       - http:
           method: post
           path: /accounts
+      - http:
+          method: get
+          path: /accounts/{id}
       - http:
           method: get
           path: /accounts
@@ -37,21 +30,26 @@ functions:
           method: delete
           path: /accounts/{id}
 
-      # - httpApi:
-      #     method: get
-      #     path: /accounts/{id}
-      # - httpApi:
-      #     method: get
-      #     path: /accounts/
-      # - httpApi:
-      #     method: post
-      #     path: /accounts
-      # - httpApi:
-      #     method: patch
-      #     path: /accounts/{id}
-      # - httpApi:
-      #     method: delete
-      #     path: /accounts/{id}
+      # performances routes
+      - http:
+          method: post
+          path: /performances
+      - http:
+          method: get
+          path: /performances
+      - http:
+          method: get
+          path: /performances/{id}
+      - http:
+          method: get
+          path: /performances/title/{title}
+      - http:
+          method: patch
+          path: /performances/{id}
+      - http:
+          method: delete
+          path: /performances/{id}
+
 package:
   patterns:
     - "!node_modules/.prisma/client/libquery_engine-*"

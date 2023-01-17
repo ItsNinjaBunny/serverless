@@ -32,7 +32,7 @@ export class Perfomer {
 }
 
 export class Character {
-  id: number;
+  id: string;
   name: string;
   role: 'lead' | 'supporting' | 'extra';
 }
@@ -52,6 +52,7 @@ export class UpdateAccountDto extends PartialType(CreateAccountDto) { }
 
 export class CreatePerformanceDto {
   name: string;
+  dates: Date[];
   director: Director;
   castingDirector: CastingDirector;
   cast: Character[];
