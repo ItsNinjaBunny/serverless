@@ -33,6 +33,7 @@ model Performer {
   characters         Character[]
   performances       Performance[] @relation(name: "performance")
   performanceHistory Performance[] @relation(name: "history")
+  Audition           Audition[]
 }
 
 model Director {
@@ -41,6 +42,7 @@ model Director {
   accountId String  @unique
 
   performances Performance[]
+  Audition     Audition[]
 }
 
 model CastingDirector {
@@ -49,9 +51,22 @@ model CastingDirector {
   accountId String  @unique
 
   performance Performance[]
+  Audition    Audition[]
 }
 
-// write audition model when working on audition feature
+model Audition {
+  id         String      @id @default(cuid())
+  performers Performer[]
+  dates      DateTime[]  @default([])
+
+  director          Director        @relation(fields: [directorId], references: [id])
+  directorId        String          @unique
+  castingDirector   CastingDirector @relation(fields: [castingDirectorId], references: [id])
+  castingDirectorId String          @unique
+  performance       Performance?    @relation(fields: [performanceId], references: [id])
+  performanceId     String?         @unique
+  venue             Venue?
+}
 
 model Performance {
   id              String          @id @default(cuid())
@@ -68,6 +83,7 @@ model Performance {
   performerHistoryId String?    @unique
   directorId         String
   castingDirectorId  String
+  Audition           Audition[]
 }
 
 model Venue {
@@ -78,6 +94,8 @@ model Venue {
   postalCode    String
   performance   Performance? @relation(fields: [performanceId], references: [id])
   performanceId String?      @unique
+  audition      Audition?    @relation(fields: [auditionId], references: [id])
+  auditionId    String?      @unique
 }
 
 model Character {
