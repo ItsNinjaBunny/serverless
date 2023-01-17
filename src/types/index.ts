@@ -60,3 +60,14 @@ export class CreatePerformanceDto {
 }
 
 export class UpdatePerformanceDto extends PartialType(CreatePerformanceDto) { }
+
+export class CreateAuditionDto {
+  dates: Date[];
+  performance: Performance;
+  cast: Character[];
+  director: Director;
+  castingDirector: CastingDirector;
+  venue: Venue;
+}
+
+export class UpdateAuditionDto extends PartialType(CreateAuditionDto) { }
