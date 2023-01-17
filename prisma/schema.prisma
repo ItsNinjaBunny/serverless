@@ -31,10 +31,14 @@ model Performer {
   accountId String  @unique
 
   characters         Character[]
-  performances       Performance[]        @relation(name: "performance")
-  performanceHistory Performance[]        @relation(name: "history")
+  performances       Performance[] @relation(name: "performance")
+  performanceHistory Performance[] @relation(name: "history")
   Audition           Audition[]
-  AuditionCharacters AuditionCharacters[]
+
+  Performance            Performance?        @relation(fields: [performanceId], references: [id])
+  performanceId          String?
+  AuditionCharacters     AuditionCharacters? @relation(fields: [auditionCharactersName], references: [name])
+  auditionCharactersName String?
 }
 
 model Director {
@@ -43,7 +47,7 @@ model Director {
   accountId String  @unique
 
   performances Performance[]
-  Audition     Audition[]
+  auditions    Audition[]
 }
 
 model CastingDirector {
@@ -52,11 +56,12 @@ model CastingDirector {
   accountId String  @unique
 
   performance Performance[]
-  Audition    Audition[]
+  auditions   Audition[]
 }
 
 model Audition {
   id         String      @id @default(cuid())
+  name       String
   performers Performer[]
   dates      DateTime[]  @default([])
 
@@ -67,7 +72,7 @@ model Audition {
   performance        Performance?         @relation(fields: [performanceId], references: [id])
   performanceId      String?              @unique
   venue              Venue?
-  AuditionCharacters AuditionCharacters[]
+  auditionCharacters AuditionCharacters[]
 }
 
 model Performance {
@@ -79,13 +84,13 @@ model Performance {
   cast            Character[]
   venue           Venue?
 
-  performer          Performer? @relation(name: "performance", fields: [performerId], references: [id])
-  performerId        String?    @unique
-  performerHistory   Performer? @relation(name: "history", fields: [performerHistoryId], references: [id])
-  performerHistoryId String?    @unique
-  directorId         String
-  castingDirectorId  String
-  Audition           Audition[]
+  performer         Performer[] @relation(name: "performance")
+  performerHistory  Performer[] @relation(name: "history")
+  directorId        String
+  castingDirectorId String
+  Performer         Performer[]
+  Audition          Audition?
+  performerId       String?
 }
 
 model Venue {
@@ -111,14 +116,14 @@ model Character {
 }
 
 model AuditionCharacters {
-  id String @id @default(cuid())
-
   name       String        @unique
   role       CharacterRole
   performers Performer[]
 
   audition   Audition? @relation(fields: [auditionId], references: [id])
   auditionId String?
+
+  @@unique([auditionId, name])
 }
 
 enum CharacterRole {

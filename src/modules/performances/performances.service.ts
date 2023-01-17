@@ -34,7 +34,7 @@ export class PerformancesService {
         venue: {
           connectOrCreate: {
             where: {
-              id: id ? id : undefined,
+              id: id
             },
             create: {
               street: apt ? `${address.street} ${apt}` : address.street,
@@ -117,9 +117,6 @@ export class PerformancesService {
           deleteMany: {
             performanceId: id
           }
-        },
-        venue: {
-          disconnect: true
         }
       }
     });

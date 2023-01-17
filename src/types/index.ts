@@ -37,6 +37,11 @@ export class Character {
   role: 'lead' | 'supporting' | 'extra';
 }
 
+export class AuditionCharacter {
+  name: string;
+  role: 'lead' | 'supporting' | 'extra';
+}
+
 export class Venue {
   id: string;
   street: string;
@@ -51,6 +56,7 @@ export class CreateAccountDto extends Account { }
 export class UpdateAccountDto extends PartialType(CreateAccountDto) { }
 
 export class CreatePerformanceDto {
+  id: string;
   name: string;
   dates: Date[];
   director: Director;
@@ -62,9 +68,10 @@ export class CreatePerformanceDto {
 export class UpdatePerformanceDto extends PartialType(CreatePerformanceDto) { }
 
 export class CreateAuditionDto {
+  name: string;
   dates: Date[];
-  performance: Performance;
-  cast: Character[];
+  performance: CreatePerformanceDto;
+  cast: AuditionCharacter[];
   director: Director;
   castingDirector: CastingDirector;
   venue: Venue;

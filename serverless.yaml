@@ -13,7 +13,7 @@ functions:
   main:
     handler: ./dist/serverless.handler
     events:
-      # account routes
+      # Accounnt routes
       - http:
           method: post
           path: /accounts
@@ -30,7 +30,7 @@ functions:
           method: delete
           path: /accounts/{id}
 
-      # performances routes
+      # Performance routes
       - http:
           method: post
           path: /performances
@@ -49,6 +49,23 @@ functions:
       - http:
           method: delete
           path: /performances/{id}
+
+      # Audition routes
+      - http:
+          method: post
+          path: /auditions
+      - http:
+          method: get
+          path: /auditions
+      - http:
+          method: get
+          path: /auditions/{id}
+      - http:
+          method: patch
+          path: /auditions/{id}
+      - http:
+          method: delete
+          path: /auditions/{id}
 
 package:
   patterns:
