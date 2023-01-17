@@ -31,9 +31,10 @@ model Performer {
   accountId String  @unique
 
   characters         Character[]
-  performances       Performance[] @relation(name: "performance")
-  performanceHistory Performance[] @relation(name: "history")
+  performances       Performance[]        @relation(name: "performance")
+  performanceHistory Performance[]        @relation(name: "history")
   Audition           Audition[]
+  AuditionCharacters AuditionCharacters[]
 }
 
 model Director {
@@ -58,15 +59,15 @@ model Audition {
   id         String      @id @default(cuid())
   performers Performer[]
   dates      DateTime[]  @default([])
-  cast       Character[]
 
-  director          Director        @relation(fields: [directorId], references: [id])
-  directorId        String          @unique
-  castingDirector   CastingDirector @relation(fields: [castingDirectorId], references: [id])
-  castingDirectorId String          @unique
-  performance       Performance?    @relation(fields: [performanceId], references: [id])
-  performanceId     String?         @unique
-  venue             Venue?
+  director           Director             @relation(fields: [directorId], references: [id])
+  directorId         String               @unique
+  castingDirector    CastingDirector      @relation(fields: [castingDirectorId], references: [id])
+  castingDirectorId  String               @unique
+  performance        Performance?         @relation(fields: [performanceId], references: [id])
+  performanceId      String?              @unique
+  venue              Venue?
+  AuditionCharacters AuditionCharacters[]
 }
 
 model Performance {
@@ -107,8 +108,17 @@ model Character {
   performerId   String?       @unique
   Performance   Performance?  @relation(fields: [performanceId], references: [id])
   performanceId String?
-  Audition      Audition?     @relation(fields: [auditionId], references: [id])
-  auditionId    String?
+}
+
+model AuditionCharacters {
+  id String @id @default(cuid())
+
+  name       String        @unique
+  role       CharacterRole
+  performers Performer[]
+
+  audition   Audition? @relation(fields: [auditionId], references: [id])
+  auditionId String?
 }
 
 enum CharacterRole {
