@@ -58,6 +58,7 @@ model Audition {
   id         String      @id @default(cuid())
   performers Performer[]
   dates      DateTime[]  @default([])
+  cast       Character[]
 
   director          Director        @relation(fields: [directorId], references: [id])
   directorId        String          @unique
@@ -106,6 +107,8 @@ model Character {
   performerId   String?       @unique
   Performance   Performance?  @relation(fields: [performanceId], references: [id])
   performanceId String?
+  Audition      Audition?     @relation(fields: [auditionId], references: [id])
+  auditionId    String?
 }
 
 enum CharacterRole {
